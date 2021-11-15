@@ -2,7 +2,7 @@
 /**
  * BoxBilling
  *
- * @copyright BoxBilling, Inc (http://www.boxbilling.com)
+ * @copyright BoxBilling, Inc (https://www.boxbilling.org)
  * @license   Apache-2.0
  *
  * Copyright BoxBilling, Inc
@@ -47,7 +47,7 @@ class Service implements InjectionAwareInterface
 
         return $product->title;
     }
-    
+
     public function validateOrderData(array &$data)
     {
         if(!isset($data['server_id'])) {
@@ -99,8 +99,8 @@ class Service implements InjectionAwareInterface
     {
         $orderService = $this->di['mod_service']('order');
         $model = $orderService->getOrderService($order);
-        if(!$model instanceof \Model_ServiceHosting) {
-            throw new \Box_Exception('Could not activate order. Service was not created');
+        if(!$model instanceof \RedBean_SimpleModel) {
+            throw new \Box_Exception('Order :id has no active service', array(':id'=>$order->id));
         }
 
         $pass = $this->di['tools']->generatePassword(10, 4);
@@ -108,13 +108,13 @@ class Service implements InjectionAwareInterface
         if(isset($c['password']) && !empty($c['password'])) {
             $pass = $c['password'];
         }
-        
+
         if(isset($c['username']) && !empty($c['username'])) {
             $username = $c['username'];
         } else {
-            $username = $this->_generateUsername();
+            $username = $this->_generateUsername($model->sld.$model->tld);
         }
-        
+
         $model->username = $username;
         $model->pass = $pass;
         $this->di['db']->store($model);
@@ -123,7 +123,7 @@ class Service implements InjectionAwareInterface
             list($adapter, $account) = $this->_getAM($model);
             $adapter->createAccount($account);
         }
-        
+
         return array(
             'username'  =>  $username,
             'password'  =>  $pass,
@@ -257,16 +257,16 @@ class Service implements InjectionAwareInterface
     public function changeAccountUsername(\Model_ClientOrder $order, \Model_ServiceHosting $model, $data)
     {
         if(!isset($data['username']) || empty($data['username'])) {
-            throw new \Box_Exception('Account password is missing or is not valid');
+            throw new \Box_Exception('Account username is missing or is not valid');
         }
 
-        $u = $data['username'];
+        $u = strtolower($data['username']);
 
         if($this->_performOnService($order)){
             list($adapter, $account) = $this->_getAM($model);
             $adapter->changeAccountUsername($account, $u);
         }
-        
+
         $model->username = $u;
         $model->updated_at = date('Y-m-d H:i:s');
         $this->di['db']->store($model);
@@ -287,7 +287,7 @@ class Service implements InjectionAwareInterface
             list($adapter, $account) = $this->_getAM($model);
             $adapter->changeAccountIp($account, $ip);
         }
-        
+
         $model->ip = $ip;
         $model->updated_at = date('Y-m-d H:i:s');
         $this->di['db']->store($model);
@@ -309,7 +309,7 @@ class Service implements InjectionAwareInterface
             list($adapter, $account) = $this->_getAM($model);
             $adapter->changeAccountDomain($account, $sld.$tld);
         }
-        
+
         $model->sld = $sld;
         $model->tld = $tld;
         $model->updated_at = date('Y-m-d H:i:s');
@@ -351,7 +351,7 @@ class Service implements InjectionAwareInterface
         if($account->getIp() != $updated->getIp()) {
             $model->ip = $updated->getIp();
         }
-        
+
         $model->updated_at = date('Y-m-d H:i:s');
         $this->di['db']->store($model);
         $this->di['logger']->info('Synchronizing hosting account %s with server', $model->id);
@@ -378,19 +378,17 @@ class Service implements InjectionAwareInterface
     {
         return ($order->status != \Model_ClientOrder::STATUS_FAILED_SETUP);
     }
-    
+
     /**
      * Generate username by domain
      *
      */
-    private function _generateUsername()
+    private function _generateUsername($domain_name)
     {
-        $num1 = rand(10000, 99999);
-        $num2 = rand(10000, 99999);
-        $username = $num1 . $num2;
-        $username = substr($username, 0, 8); // max length 8
-        $username[0] = "u";
-
+		$username =  preg_replace('/[^A-Za-z0-9]/', '', $domain_name);
+		$username = substr($username,0,7);
+		$randnum = rand(0, 9);
+        $username = $username . $randnum;
         return $username;
     }
 
@@ -687,6 +685,9 @@ class Service implements InjectionAwareInterface
         $model->accesshash   = $this->di['array_get']($data, 'accesshash', $model->accesshash);
         $model->port         = $this->di['array_get']($data, 'port', $model->port);
         $model->secure       = $this->di['array_get']($data, 'secure', $model->secure);
+        $model->username     = $this->di['array_get']($data, 'username', $model->username);
+        $model->password     = $this->di['array_get']($data, 'password', $model->password);
+        $model->accesshash     = $this->di['array_get']($data, 'accesshash', $model->accesshash);
 
         $model->updated_at = date('Y-m-d H:i:s');
         $this->di['db']->store($model);
@@ -929,5 +930,29 @@ class Service implements InjectionAwareInterface
             throw new \Box_Exception('Could not find main domain product');
         }
         return array('product'=>$d, 'config'=> $dc);
+    }
+
+    /**
+     * @param \Model_Product $product
+     * @return array
+     */
+    public function getFreeTlds(\Model_Product $product)
+    {
+        $config = $this->di['tools']->decodeJ($product->config);
+        $freeTlds = $this->di['array_get']($config, 'free_tlds', array());
+        $result = array();
+        foreach ($freeTlds as $tld){
+            $result[] = array('tld' => $tld);
+        }
+
+        if (empty ($result)) {
+            $query = 'active = 1 and allow_register = 1';
+            $tlds   = $this->di['db']->find('Tld', $query, array());
+            $serviceDomainService = $this->di['mod_service']('Servicedomain');
+            foreach ($tlds as $model) {
+                $result[] = $serviceDomainService->tldToApiArray($model);
+            }
+        }
+        return $result;
     }
 }

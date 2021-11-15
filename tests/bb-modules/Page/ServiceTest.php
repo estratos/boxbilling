@@ -4,7 +4,7 @@
 namespace Box\Mod\Page;
 
 
-class ServiceTest extends \PHPUnit_Framework_TestCase {
+class ServiceTest extends \BBTestCase {
 
     public function testgetPairs()
     {
@@ -19,7 +19,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
 
         $service->setDi($di);
         $result = $service->getPairs();
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
     }
 }
  

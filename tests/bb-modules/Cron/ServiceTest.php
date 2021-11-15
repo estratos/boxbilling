@@ -4,7 +4,7 @@
 namespace Box\Mod\Cron;
 
 
-class ServiceTest extends \PHPUnit_Framework_TestCase {
+class ServiceTest extends \BBTestCase {
 
     public function testgetDi()
     {
@@ -26,7 +26,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
         $service->setDi($di);
 
         $result = $service->getCronInfo();
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
     }
 
     public function testrunCrons()
@@ -86,7 +86,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
         $service->setDi($di);
 
         $result = $service->getLastExecutionTime();
-        $this->assertInternalType('string', $result);
+        $this->assertIsString($result);
     }
 
     public function testisLate()
@@ -100,7 +100,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
             ->will($this->returnValue(date('Y-m-d H:i:s')));
 
         $result = $serviceMock->isLate();
-        $this->assertInternalType('bool', $result);
+        $this->assertIsBool($result);
         $this->assertFalse($result);
     }
 }

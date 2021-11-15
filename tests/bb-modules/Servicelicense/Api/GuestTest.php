@@ -4,13 +4,13 @@
 namespace Box\Mod\Servicelicense\Api;
 
 
-class GuestTest extends \PHPUnit_Framework_TestCase {
+class GuestTest extends \BBTestCase {
     /**
      * @var \Box\Mod\Servicelicense\Api\Guest
      */
     protected $api = null;
 
-    public function setup()
+    public function setup(): void
     {
         $this->api= new \Box\Mod\Servicelicense\Api\Guest();
     }
@@ -27,12 +27,12 @@ class GuestTest extends \PHPUnit_Framework_TestCase {
     {
         $data = array(
             'license' => 'license1234',
-            'host' => 'boxbilling.com',
+            'host' => 'boxbilling.org',
             'version' => 1,
         );
 
         $licenseResult =  array(
-            'licensed_to' => 'boxbilling.com',
+            'licensed_to' => 'boxbilling.org',
             'created_at' => '2011-12-31',
             'expires_at' => '2020-01+01',
             'valid' => true,
@@ -45,7 +45,7 @@ class GuestTest extends \PHPUnit_Framework_TestCase {
         $this->api->setService($serviceMock);
         $result = $this->api->check($data);
 
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
     }
 }
  

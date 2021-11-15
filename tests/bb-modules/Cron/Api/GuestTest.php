@@ -4,7 +4,7 @@
 namespace Box\Mod\Cron\Api;
 
 
-class GuestTest extends \PHPUnit_Framework_TestCase {
+class GuestTest extends \BBTestCase {
 
     public function testgetDi()
     {
@@ -20,7 +20,7 @@ class GuestTest extends \PHPUnit_Framework_TestCase {
         $api = new \Box\Mod\Cron\Api\Guest();
 
         $result = $api->check();
-        $this->assertInternalType('bool', $result);
+        $this->assertIsBool($result);
         $this->assertFalse($result);
     }
 
@@ -33,7 +33,7 @@ class GuestTest extends \PHPUnit_Framework_TestCase {
         $api->setMod($modMock);
 
         $result = $api->settings();
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
     }
 
     public function testis_late()
@@ -45,7 +45,7 @@ class GuestTest extends \PHPUnit_Framework_TestCase {
         $api->setService($serviceMock);
 
         $result = $api->is_late();
-        $this->assertInternalType('bool', $result);
+        $this->assertIsBool($result);
         $this->assertTrue($result);
     }
 

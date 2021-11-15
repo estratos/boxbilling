@@ -30,10 +30,12 @@
                     </td>
                     <td>
                         {% if item.discount_price %}
-                            <del>{{ (item.price * item.quantity) | money_convert }}</del>
-                            <strong class="text-success">{{ (item.price * item.quantity - item.discount_price) | money_convert }}</strong>
+                        <del>{{ item.total | money_convert }}</del>
+                        <strong class="text-success">{{ (item.total-item.discount_price) | money_convert }}</strong>
+							
+								
                         {% else %}
-                            {{ (item.price * item.quantity) | money_convert }}
+                            {{ (item.total) | money_convert }}
                         {% endif %}
                     </td>
                     <td><button data-cart-item-id="{{ item.id }}" class="btn btn-inverse btn-mini remove-cart-item" title="{% trans 'Remove item' %}"><strong><i class="awe-remove"></i></strong></button></td>
@@ -97,6 +99,7 @@
                     {% endif %}
                 </tr>
                 {% endif %}
+			
                 {% endfor %}
                 </tbody>
             </table>
@@ -137,7 +140,7 @@
                         {% if cart.discount >0 %}
                         <tr>
                             <td><strong>{% trans 'Subtotal:' %}</strong></td>
-                            <td><strong>{{ (cart.total + cart.discount)| money_convert }}</strong></td>
+                            <td><strong>{{ (cart.subtotal)| money_convert }}</strong></td>
                         </tr>
                         <tr>
                             <td><strong>{% trans 'Discount:' %}</strong></td>

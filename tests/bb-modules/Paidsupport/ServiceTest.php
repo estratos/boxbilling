@@ -4,13 +4,13 @@
 namespace Box\Mod\Paidsupport;
 
 
-class ServiceTest extends \PHPUnit_Framework_TestCase {
+class ServiceTest extends \BBTestCase {
     /**
      * @var \Box\Mod\Paidsupport\Service
      */
     protected $service = null;
 
-    public function setup()
+    public function setup(): void
     {
         $this->service= new \Box\Mod\Paidsupport\Service();
     }
@@ -92,7 +92,8 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
         });
         $this->service->setDi($di);
 
-        $this->setExpectedException('\Box_Exception', $paidSupportConfig['error_msg']);
+        $this->expectException(\Box_Exception::class);
+        $this->expectExceptionMessage($paidSupportConfig['error_msg']);
         $this->service->enoughInBalanceToOpenTicket($clientModel);
     }
 
@@ -449,7 +450,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
 
         $this->service->setDi($di);
         $result = $this->service->getPaidHelpdeskConfig();
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $this->assertNotEmpty($result);
         $this->assertEquals($helpdeskConfig, $result);
 
@@ -468,7 +469,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
 
         $this->service->setDi($di);
         $result = $this->service->getPaidHelpdeskConfig();
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $this->assertEmpty($result);
     }
 

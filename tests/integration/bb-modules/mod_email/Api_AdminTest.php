@@ -2,7 +2,7 @@
 /**
  * @group Core
  */
-class Api_Admin_EmailTest extends BBDbApiTestCase
+class Api_AdminTest extends BBDbApiTestCase
 {
     protected $_initialSeedFile = 'emails.xml';
 
@@ -24,13 +24,13 @@ class Api_Admin_EmailTest extends BBDbApiTestCase
     public function testTemplates()
     {
         $array = $this->api_admin->email_template_get_list();
-        $this->assertInternalType('array', $array);
+        $this->assertIsArray($array);
         
         $data = array(
             'id'    =>  1,
         );
         $array = $this->api_admin->email_template_get($data);
-        $this->assertInternalType('array', $array);
+        $this->assertIsArray($array);
 
         $data = array(
             'action_code'    =>  'test',
@@ -64,13 +64,13 @@ class Api_Admin_EmailTest extends BBDbApiTestCase
     public function testEmails()
     {
         $array = $this->api_admin->email_email_get_list();
-        $this->assertInternalType('array', $array);
+        $this->assertIsArray($array);
 
         $data = array(
             'id'    =>  1,
         );
         $array = $this->api_admin->email_email_get($data);
-        $this->assertInternalType('array', $array);
+        $this->assertIsArray($array);
     }
 
     public function testSend()
@@ -78,7 +78,7 @@ class Api_Admin_EmailTest extends BBDbApiTestCase
         $data = array(
             'to'    =>  'demo@boxbiling.com',
             'to_name'    =>  'Client name',
-            'from'    =>  'admin@boxbilling.com',
+            'from'    =>  'admin@boxbilling.org',
             'from_name'    =>  'Admin',
             'subject'    =>  'This is subject',
             'content'    =>  'This is message',
@@ -140,7 +140,7 @@ class Api_Admin_EmailTest extends BBDbApiTestCase
     public function testTemplateGeneralSend()
     {
         $params = array();
-        $params['to'] = 'client@boxbilling.com';
+        $params['to'] = 'client@boxbilling.org';
         $params['to_name'] = 'Client PHPUnit';
         
         $params['code'] = 'mod_client_signup';
@@ -158,7 +158,7 @@ class Api_Admin_EmailTest extends BBDbApiTestCase
     public function testTemplate_populateVariables()
     {
         $params = array();
-        $params['to'] = 'client@boxbilling.com';
+        $params['to'] = 'client@boxbilling.org';
         $params['to_name'] = 'Client PHPUnit';
 
         $params['code'] = 'mod_client_signup';
@@ -208,11 +208,11 @@ class Api_Admin_EmailTest extends BBDbApiTestCase
     public function testEmailEmailGetList()
     {
         $array = $this->api_admin->email_email_get_list();
-        $this->assertInternalType('array', $array);
+        $this->assertIsArray($array);
 
         $this->assertArrayHasKey('list', $array);
         $list = $array['list'];
-        $this->assertInternalType('array', $list);
+        $this->assertIsArray($list);
         if (count($list)) {
             $item = $list[0];
             $this->assertArrayHasKey('id', $item);
@@ -230,11 +230,11 @@ class Api_Admin_EmailTest extends BBDbApiTestCase
     public function testEmailTemplateGetList()
     {
         $array = $this->api_admin->email_template_get_list();
-        $this->assertInternalType('array', $array);
+        $this->assertIsArray($array);
 
         $this->assertArrayHasKey('list', $array);
         $list = $array['list'];
-        $this->assertInternalType('array', $list);
+        $this->assertIsArray($list);
         if (count($list)) {
             $item = $list[0];
             $this->assertArrayHasKey('id', $item);

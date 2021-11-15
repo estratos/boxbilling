@@ -2,14 +2,14 @@
 namespace Box\Tests\Mod\Profile\Api;
 
 
-class ClientTest extends \PHPUnit_Framework_TestCase
+class ClientTest extends \BBTestCase
 {
     /**
      * @var \Box\Mod\Profile\Api\Client
      */
     protected $clientApi = null;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->clientApi = new \Box\Mod\Profile\Api\Client();
     }
@@ -29,7 +29,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->clientApi->setIdentity(new \Model_Client());
 
         $result = $this->clientApi->get();
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
     }
 
     public function testUpdate()
@@ -99,9 +99,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($result);
     }
 
-    /**
-     * @expectedException \Box_Exception
-     */
     public function testChange_passwordPasswordsDoNotMatchException()
     {
         $service = $this->getMockBuilder('\Box\Mod\Profile\Service')->getMock();
@@ -123,6 +120,8 @@ class ClientTest extends \PHPUnit_Framework_TestCase
             'password_confirm' => '16047a3e69f5245756d73b419348f0c7',
             'password'         => '7c0f843914b37d6575425f96e3a74061' //passwords do not match
         );
+
+        $this->expectException(\Box_Exception::class);
         $result = $this->clientApi->change_password($data);
         $this->assertTrue($result);
     }

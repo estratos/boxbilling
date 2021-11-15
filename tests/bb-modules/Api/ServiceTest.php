@@ -4,13 +4,13 @@
 namespace Box\Mod\Api;
 
 
-class ServiceTest extends \PHPUnit_Framework_TestCase {
+class ServiceTest extends \BBTestCase {
     /**
      * @var \Box\Mod\Api\Service
      */
     protected $service = null;
 
-    public function setup()
+    public function setup(): void
     {
         $this->service= new \Box\Mod\Api\Service();
     }
@@ -45,7 +45,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
 
         $this->service->setDi($di);
         $result = $this->service->logRequest();
-        $this->assertInternalType('int', $result);
+        $this->assertIsInt($result);
         $this->assertEquals($affectedRows, $result);
     }
 
@@ -67,7 +67,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
         $this->service->setDi($di);
         $result = $this->service->getRequestCount($since, $ip);
 
-        $this->assertInternalType('int', $result);
+        $this->assertIsInt($result);
         $this->assertEquals($requestNumber, $result);
 
     }

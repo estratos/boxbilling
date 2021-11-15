@@ -1,11 +1,11 @@
 <?php
 
 
-class Payment_Adapter_StripeTest extends PHPUnit_Framework_TestCase {
+class Payment_Adapter_StripeTest extends PHPUnit\Framework\TestCase {
 
     private $defaultConfig = array();
 
-    public function setup()
+    public function setup(): void
     {
         $this->defaultConfig = array(
             'api_key' => '123APIKEY456',
@@ -75,7 +75,7 @@ class Payment_Adapter_StripeTest extends PHPUnit_Framework_TestCase {
 
         $api_admin = new Api_Handler(new Model_Admin());
         $result = $adapterMock->getHtml($api_admin, 2, false);
-        $this->assertInternalType('string', $result);
+        $this->assertIsString($result);
     }
 
     public function testgetAmountInCents()
@@ -160,39 +160,6 @@ class Payment_Adapter_StripeTest extends PHPUnit_Framework_TestCase {
         $this->assertEquals($expectedTitle, $result);
     }
 
-    public function testlogError()
-    {
-        $di = new Box_Di();
-        $di['config'] = array('debug' => false);
-
-        $transactionModel = new Model_Transaction();
-        $transactionModel->loadBean(new \RedBeanPHP\OODBBean());
-
-        $dbMock = $this->getMockBuilder('\Box_Database')->getMock();
-        $dbMock->expects($this->atLeastOnce())
-            ->method('store')
-            ->with($transactionModel);
-        $di['db'] = $dbMock;
-
-        $bodyArr = array(
-            'error' => array(
-                'type' => 'custom',
-                'message' => 'Unit tests',
-            )
-        );
-
-        $exceptionMock = $this->getMockBuilder('Stripe\\Error\\Card')->disableOriginalConstructor()->getMock();
-        $exceptionMock->expects($this->atLeastOnce())
-            ->method('getJsonBody')
-            ->willReturn($bodyArr);
-
-        $adapter = new Payment_Adapter_Stripe($this->defaultConfig);
-        $adapter->setDi($di);
-
-        $this->setExpectedException('Exception', $bodyArr['error']['message']);
-        $adapter->logError($exceptionMock, $transactionModel);
-    }
-
     public function testget_test_pub_key()
     {
         $config = $this->defaultConfig;
@@ -206,7 +173,10 @@ class Payment_Adapter_StripeTest extends PHPUnit_Framework_TestCase {
     {
         $config = $this->defaultConfig;
         $adapter = new Payment_Adapter_Stripe($config);
-        $this->setExpectedException('Payment_Exception', 'Payment gateway "Stripe" is not configured properly. Please update configuration parameter "test_pub_key" at "Configuration -> Payments".');
+
+        $this->expectException(Payment_Exception::class);
+        $this->expectExceptionMessage('Payment gateway "Stripe" is not configured properly. Please update configuration parameter "test_pub_key" at "Configuration -> Payments".');
+
         $adapter->get_test_pub_key();
 
     }
@@ -224,7 +194,10 @@ class Payment_Adapter_StripeTest extends PHPUnit_Framework_TestCase {
     {
         $config = $this->defaultConfig;
         $adapter = new Payment_Adapter_Stripe($config);
-        $this->setExpectedException('Payment_Exception', 'Payment gateway "Stripe" is not configured properly. Please update configuration parameter "test_api_key" at "Configuration -> Payments".');
+
+        $this->expectException(Payment_Exception::class);
+        $this->expectExceptionMessage('Payment gateway "Stripe" is not configured properly. Please update configuration parameter "test_api_key" at "Configuration -> Payments".');
+
         $adapter->get_test_api_key();
 
     }

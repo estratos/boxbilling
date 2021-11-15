@@ -2,7 +2,7 @@
 /**
  * BoxBilling
  *
- * @copyright BoxBilling, Inc (http://www.boxbilling.com)
+ * @copyright BoxBilling, Inc (https://www.boxbilling.org)
  * @license   Apache-2.0
  *
  * Copyright BoxBilling, Inc
@@ -265,7 +265,7 @@ class Service implements InjectionAwareInterface
     public function getExpiredPasswordReminders()
     {
         $expire_after_hours = 2;
-        $expired = $this->di['db']->find('ClientPasswordReset', 'UNIX_TIMESTAMP() - ? > created_at', array($expire_after_hours * 60 * 60));
+        $expired = $this->di['db']->find('ClientPasswordReset', 'UNIX_TIMESTAMP() - ? > UNIX_TIMESTAMP(created_at)', array($expire_after_hours * 60 * 60));
         return $expired;
     }
 
@@ -281,9 +281,9 @@ class Service implements InjectionAwareInterface
         $where = array();
         $params = array();
         if($search) {
-            $where[] = 'c.first_name LIKE %:first_name% OR c.last_name LIKE %:last_name% OR c.id LIKE :id';
-            $params[':first_name'] = $search;
-            $params[':last_name'] = $search;
+            $where[] = 'c.first_name LIKE :first_name OR c.last_name LIKE :last_name OR c.id LIKE :id';
+            $params[':first_name'] = "%".$search."%";
+            $params[':last_name'] = "%".$search."%";
             $params[':id'] = $search;
         }
 
@@ -481,13 +481,17 @@ class Service implements InjectionAwareInterface
         $client->first_name = ucwords($this->di['array_get']($data, 'first_name'));
         $client->pass       = $this->di['password']->hashIt($password);
 
+        $phoneCC = $this->di['array_get']($data, 'phone_cc', $client->phone_cc);
+        if(!empty($phoneCC)){
+            $client->phone_cc = intval($phoneCC);
+        }
+
         $client->aid             = $this->di['array_get']($data, 'aid');
         $client->last_name       = $this->di['array_get']($data, 'last_name');
         $client->client_group_id = $this->di['array_get']($data, 'group_id');
         $client->status          = $this->di['array_get']($data, 'status');
         $client->gender          = $this->di['array_get']($data, 'gender');
         $client->birthday        = $this->di['array_get']($data, 'birthday');
-        $client->phone_cc        = $this->di['array_get']($data, 'phone_cc');
         $client->phone           = $this->di['array_get']($data, 'phone');
         $client->company         = $this->di['array_get']($data, 'company');
         $client->company_vat     = $this->di['array_get']($data, 'company_vat');

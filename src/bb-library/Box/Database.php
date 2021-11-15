@@ -2,7 +2,7 @@
 /**
  * BoxBilling
  *
- * @copyright BoxBilling, Inc (http://www.boxbilling.com)
+ * @copyright BoxBilling, Inc (https://www.boxbilling.org)
  * @license   Apache-2.0
  *
  * Copyright BoxBilling, Inc
@@ -38,7 +38,9 @@ class Box_Database implements InjectionAwareInterface
     {
         $type = $this->_getTypeFromModelName($modelName);
         $bean = $this->orm->dispense($type);
-        if($type == $modelName) return $bean;
+        if($type == $modelName){
+            return $bean;
+        }
         return $bean->box();
     }
 
@@ -76,7 +78,9 @@ class Box_Database implements InjectionAwareInterface
     {
         $type = $this->_getTypeFromModelName($modelName);
         $bean = $this->orm->findOne($type, $sql, $values);
-        if($type == $modelName) return $bean;
+        if($type == $modelName) {
+            return $bean;
+        }
         if($bean && $bean->id) {
             return $bean->box();
         }
@@ -87,7 +91,9 @@ class Box_Database implements InjectionAwareInterface
     {
         $type = $this->_getTypeFromModelName($modelName);
         $beans = $this->orm->find($type, $sql, $values);
-        if($type == $modelName) return $beans;
+        if($type == $modelName){
+            return $beans;
+        }
         foreach ($beans as &$bean) {
             $bean = $bean->box();
         }
@@ -110,7 +116,9 @@ class Box_Database implements InjectionAwareInterface
 
         $type = $this->_getTypeFromModelName($modelName);
         $bean = $this->orm->load($type, $id);
-        if ($type == $modelName) return $bean;
+        if ($type == $modelName){
+            return $bean;
+        }
         if ($bean && $bean->id) {
             return $bean->box();
         }
@@ -173,22 +181,6 @@ class Box_Database implements InjectionAwareInterface
         }
 
         return $model;
-    }
-
-    /**
-     * @param string $modelName
-     * @param array $records
-     * @return array
-     */
-    public function convertToModels($modelName, array $records)
-    {
-        $result = array();
-        $type = $this->_getTypeFromModelName($modelName);
-        $beans = $this->orm->convertToBeans($type, $records);
-        foreach($beans as $bean){
-            $result[] = $bean->box();
-        }
-        return $result;
     }
 
     private function _getTypeFromModelName($modelName)

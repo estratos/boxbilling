@@ -3,14 +3,14 @@ namespace Box\Tests\Mod\Servicecustom;
 
 use RedBeanPHP\SimpleModel;
 
-class ServiceTest extends \PHPUnit_Framework_TestCase
+class ServiceTest extends \BBTestCase
 {
     /**
      * @var \Box\Mod\Servicecustom\Service
      */
     protected $service = null;
 
-    public function setup()
+    public function setup(): void
     {
         $this->service = new \Box\Mod\Servicecustom\Service();
     }
@@ -61,9 +61,6 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($result);
     }
 
-    /**
-     * @expectedException \Box_Exception
-     */
     public function testValidateCustomFormFieldNameNotSetException()
     {
         $form = array(
@@ -94,13 +91,11 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
             'form_id' => rand(1, 100)
         );
         $data    = array();
+        $this->expectException(\Exception::class);
         $result  = $this->service->validateCustomForm($data, $product);
         $this->assertNull($result);
     }
 
-    /**
-     * @expectedException \Box_Exception
-     */
     public function testValidateCustomFormReadonlyFieldChangeException()
     {
         $form = array(
@@ -133,6 +128,8 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $data    = array(
             'field_name' => 'field_name'
         );
+        
+        $this->expectException(\Exception::class);
         $result  = $this->service->validateCustomForm($data, $product);
         $this->assertNull($result);
     }
@@ -197,9 +194,6 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($result);
     }
 
-    /**
-     * @expectedException \Box_Exception
-     */
     public function testActionActivateOrderServiceNotCreatedException()
     {
         $order = new \Model_ClientOrder();
@@ -217,7 +211,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
             return $serviceMock;
         });
         $this->service->setDi($di);
-
+        $this->expectException(\Exception::class);
         $this->service->action_activate($order);
     }
 
@@ -253,9 +247,6 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue($result);
     }
 
-    /**
-     * @expectedException \Box_Exception
-     */
     public function testActiveServiceNotFoundException()
     {
         $order = new \Model_ClientOrder();
@@ -274,7 +265,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
             return $serviceMock;
         });
         $this->service->setDi($di);
-
+        $this->expectException(\Exception::class);
         $result = $this->service->action_renew($order);
         $this->assertTrue($result);
     }
@@ -502,11 +493,9 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $this->service->customCall($model, 'custom_call');
     }
 
-    /**
-     * @expectedException \Box_Exception
-     */
     public function testCustomCallForbiddenMethodException()
     {
+        $this->expectException(\Exception::class);
         $this->service->customCall(new \Model_ServiceCustom(), 'delete');
     }
 
@@ -534,9 +523,6 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Model_ServiceCustom', $result);
     }
 
-    /**
-     * @expectedException \Box_Exception
-     */
     public function testGetServiceCustomByOrderIdOrderServiceNotFoundException()
     {
         $dbMock = $this->getMockBuilder('\Box_Database')->getMock();
@@ -555,7 +541,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
             return $orderService;
         });
         $this->service->setDi($di);
-
+        $this->expectException(\Exception::class);
         $this->service->getServiceCustomByOrderId(rand(1, 100));
     }
 
@@ -586,9 +572,6 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($result);
     }
 
-    /**
-     * @expectedException \Box_Exception
-     */
     public function testUpdateConfigNotArrayException()
     {
         $model = new \Model_ServiceCustom();
@@ -612,6 +595,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase
 
 
         $config = '';
+        $this->expectException(\Exception::class);
         $serviceMock->updateConfig(rand(1, 100), $config);
     }
 }

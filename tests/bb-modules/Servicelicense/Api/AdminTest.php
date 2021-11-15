@@ -4,13 +4,13 @@
 namespace Box\Mod\Servicelicense\Api;
 
 
-class AdminTest extends \PHPUnit_Framework_TestCase {
+class AdminTest extends \BBTestCase {
     /**
      * @var \Box\Mod\Servicelicense\Api\Admin
      */
     protected $api = null;
 
-    public function setup()
+    public function setup(): void
     {
         $this->api= new \Box\Mod\Servicelicense\Api\Admin();
     }
@@ -43,7 +43,7 @@ class AdminTest extends \PHPUnit_Framework_TestCase {
         $this->api->setService($serviceMock);
 
         $result = $this->api->plugin_get_pairs(array());
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $this->assertEquals($expected, $result);
     }
 
@@ -68,7 +68,7 @@ class AdminTest extends \PHPUnit_Framework_TestCase {
         $apiMock->setService($serviceMock);
         $result = $apiMock->update($data);
 
-        $this->assertInternalType('bool', $result);
+        $this->assertIsBool($result);
         $this->assertTrue($result);
     }
 
@@ -93,7 +93,7 @@ class AdminTest extends \PHPUnit_Framework_TestCase {
         $apiMock->setService($serviceMock);
         $result = $apiMock->reset($data);
 
-        $this->assertInternalType('bool', $result);
+        $this->assertIsBool($result);
         $this->assertTrue($result);
     }
 
@@ -151,7 +151,8 @@ class AdminTest extends \PHPUnit_Framework_TestCase {
 
         $this->api->setDi($di);
 
-        $this->setExpectedException('\Box_Exception', 'Order is not activated');
+        $this->expectException(\Box_Exception::class);
+        $this->expectExceptionMessage('Order is not activated');
         $this->api->_getService($data);
     }
 

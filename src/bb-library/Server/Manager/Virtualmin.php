@@ -2,20 +2,14 @@
 /**
  * BoxBilling
  *
- * LICENSE
+ * @copyright BoxBilling, Inc (https://www.boxbilling.org)
+ * @license   Apache-2.0
  *
- * This source file is subject to the license that is bundled
- * with this package in the file LICENSE.txt
- * It is also available through the world-wide-web at this URL:
- * http://www.boxbilling.com/LICENSE.txt
- * If you did not receive a copy of the license and are unable to
- * obtain it through the world-wide-web, please send an email
- * to license@boxbilling.com so we can send you a copy immediately.
- *
- * @copyright Copyright (c) 2010-2012 BoxBilling (http://www.boxbilling.com)
- * @license   http://www.boxbilling.com/LICENSE.txt
- * @version   $Id$
+ * Copyright BoxBilling, Inc
+ * This source file is subject to the Apache-2.0 License that is bundled
+ * with this source code in the file LICENSE
  */
+
 /**
  * @see http://doxfer.com/Webmin/TheWebminAPI
  */
@@ -40,9 +34,9 @@ class Server_Manager_Virtualmin extends Server_Manager
 	public function getLoginUrl()
 	{
 		if ($this->_config['secure']) {
-        	return 'http://'.$this->_config['host'] . ':' . $this->_config['port'] . '/';
+        	return 'https://'.$this->_config['host'] . ':' . $this->_config['port'] . '/';
 		} else {
-			return 'https://'.$this->_config['host'] . ':' . $this->_config['port'] . '/';
+			return 'http://'.$this->_config['host'] . ':' . $this->_config['port'] . '/';
 		}
 	}
 
@@ -227,7 +221,7 @@ class Server_Manager_Virtualmin extends Server_Manager
      */
     private function _getUrl()
     {
-    	$url = $this->_config['ssl'] ? 'https://' : 'http://';
+    	$url = (isset($this->_config['ssl']) && $this->_config['ssl'])  ? 'https://' : 'http://';
     	$url .= $this->_config['host'] . ' : ' . $this->_config['port'] . '/virtual-server/remote.cgi';
 
     	return $url;
@@ -292,9 +286,9 @@ class Server_Manager_Virtualmin extends Server_Manager
     		'max-aliasdoms'	=>	($p->getMaxDomains() == 'unlimited') ? 'UNLIMITED' : (int)$p->getMaxDomains(),
     		'max-realdoms'	=>	($p->getMaxDomains() == 'unlimited') ? 'UNLIMITED' : (int)$p->getMaxDomains(),
     		'max-quota'		=>	($p->getQuota() == 'unlimited') ? 'UNLIMITED' : (int)$p->getQuota() * 1024,
-    		'max-mailboxes'	=>	(int)$p->getPop(),
+    		'max-mailboxes'	=>	(int)$p->getMaxPop(),
     		'max-aliases'	=>	(int)$p->getMaxDomains() ? $p->getMaxDomains() : 1,
-    		'max-dbs'		=>	($p->getMaxDb() == 'unlimited') ? 'UNLIMITED' : (int)$p->getMaxDb(),
+    		'max-dbs'		=>	($p->getMaxSql() == 'unlimited') ? 'UNLIMITED' : (int)$p->getMaxSql(),
     		'max-bw'		=>	($p->getBandwidth() == 'unlimited') ? 'UNLIMITED' : (int)$p->getBandwidth() * 1024 * 1024,
     		'allow1'		=>	'dns',		//BIND DNS domain
     		'allow2'		=>	'web',		//Apache website
@@ -329,8 +323,6 @@ class Server_Manager_Virtualmin extends Server_Manager
     	} else {
     		throw new Server_Exception('Failed to create reseller\'s account');
     	}
-
-    	return false;
     }
 
     /**
@@ -418,8 +410,6 @@ class Server_Manager_Virtualmin extends Server_Manager
     	} else {
     		throw new Server_Exception('Failed to create account');
     	}
-
-    	return false;
     }
 
 	/**
@@ -442,8 +432,6 @@ class Server_Manager_Virtualmin extends Server_Manager
     	} else {
     		throw new Server_Exception('Failed to suspend user\'s account');
     	}
-
-    	return false;
     }
 
     /**
@@ -466,8 +454,6 @@ class Server_Manager_Virtualmin extends Server_Manager
     	} else {
     		throw new Server_Exception('Failed to unsuspend user\'s account');
     	}
-
-    	return false;
     }
 
     /**
@@ -491,8 +477,6 @@ class Server_Manager_Virtualmin extends Server_Manager
     	} else {
     		throw new Server_Exception('Failed to change user\'s password');
     	}
-
-    	return false;
     }
 
     /**
@@ -515,8 +499,6 @@ class Server_Manager_Virtualmin extends Server_Manager
     	} else {
     		throw new Server_Exception('Failed to delete user\'s account');
     	}
-
-    	return false;
     }
 
     /**
@@ -546,8 +528,6 @@ class Server_Manager_Virtualmin extends Server_Manager
     	} else {
     		throw new Server_Exception('Failed to modify domain details');
     	}
-
-    	return false;
     }
 
     /**
@@ -577,8 +557,6 @@ class Server_Manager_Virtualmin extends Server_Manager
     	} else {
     		throw new Server_Exception('Failed to enable features');
     	}
-
-    	return false;
     }
 
     /**
@@ -608,8 +586,6 @@ class Server_Manager_Virtualmin extends Server_Manager
     	} else {
     		throw new Server_Exception('Failed to disable features');
     	}
-
-    	return false;
     }
 
     private function _cancelReseller(Server_Account $a)
@@ -628,8 +604,6 @@ class Server_Manager_Virtualmin extends Server_Manager
     	} else {
     		throw new Server_Exception('Failed to delete reseller');
     	}
-
-    	return false;
     }
 
     private function _changeResellerPassword(Server_Account $a)
@@ -650,8 +624,6 @@ class Server_Manager_Virtualmin extends Server_Manager
     	} else {
     		throw new Server_Exception('Failed to change reseller\'s password');
     	}
-
-    	return false;
     }
 
     private function _modifyReseller(Server_Account $a)
@@ -670,9 +642,9 @@ class Server_Manager_Virtualmin extends Server_Manager
     		'max-aliasdoms'	=>	($p->getMaxDomains() == 'unlimited') ? 'UNLIMITED' : $p->getMaxDomains(),
     		'max-realdoms'	=>	($p->getMaxDomains() == 'unlimited') ? 'UNLIMITED' : $p->getMaxDomains(),
     		'max-quota'		=>	($p->getQuota() == 'unlimited') ? 'UNLIMITED' : (int)$p->getQuota() * 1024,
-    		'max-mailboxes'	=>	(int)$p->getPop(),
+    		'max-mailboxes'	=>	(int)$p->getMaxPop(),
     		'max-aliases'	=>	(int)$p->getMaxDomains() ? $p->getMaxDomains() : 1,
-    		'max-dbs'		=>	($p->getMaxDb() == 'unlimited') ? 'UNLIMITED' : (int)$p->getMaxDb(),
+    		'max-dbs'		=>	($p->getMaxSql() == 'unlimited') ? 'UNLIMITED' : (int)$p->getMaxSql(),
     		'max-bw'		=>	($p->getBandwidth() == 'unlimited') ? 'UNLIMITED' : (int)$p->getBandwidth() * 1024 * 1024,
     		'allow1'		=>	'dns',		//BIND DNS domain
     		'allow2'		=>	'web',		//Apache website
@@ -707,7 +679,5 @@ class Server_Manager_Virtualmin extends Server_Manager
     	} else {
     		throw new Server_Exception('Failed to create reseller\'s account');
     	}
-
-    	return false;
     }
 }

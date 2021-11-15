@@ -1,7 +1,7 @@
 <?php
-require_once "PHPUnit/Extensions/Database/TestCase.php";
+use PHPUnit\Framework\TestCase;
 
-abstract class BBDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
+abstract class BBDatabaseTestCase extends Testcase
 {
     static private $pdo = null;
     private $conn = NULL;
@@ -13,7 +13,7 @@ abstract class BBDatabaseTestCase extends PHPUnit_Extensions_Database_TestCase
     {
         if ($this->conn === null) {
             if (self::$pdo == null) {
-                self::$pdo = new PDO( 'mysql:dbname='.BB_DB_NAME.';host=127.0.0.1', BB_DB_USER, BB_DB_PASSWORD );
+                self::$pdo = new PDO( 'mysql:dbname='.BB_DB_NAME.';host=127.0.0.1;port='.BB_DB_PORT, BB_DB_USER, BB_DB_PASSWORD );
             }
             $this->conn = $this->createDefaultDBConnection(self::$pdo, BB_DB_NAME);
         }

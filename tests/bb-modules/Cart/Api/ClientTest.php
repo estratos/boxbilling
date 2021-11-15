@@ -2,13 +2,13 @@
 namespace Box\Tests\Mod\Cart\Api;
 
 
-class ClientTest extends \PHPUnit_Framework_TestCase {
+class ClientTest extends \BBTestCase {
     /**
      * @var \Box\Mod\Cart\Api\Client
      */
     protected $clientApi = null;
 
-    public function setup()
+    public function setup(): void
     {
         $this->clientApi = new \Box\Mod\Cart\Api\Client();
     }
@@ -51,7 +51,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
         $this->clientApi->setDi($di);
         $result = $this->clientApi->checkout($data);
 
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
     }
 }
  

@@ -4,7 +4,7 @@
 namespace Box\Tests\Mod\Activity\Controller;
 
 
-class AdminTest extends \PHPUnit_Framework_TestCase {
+class AdminTest extends \BBTestCase {
 
     public function testDi()
     {
@@ -27,14 +27,14 @@ class AdminTest extends \PHPUnit_Framework_TestCase {
         $urlMock = $this->getMockBuilder('Box_Url')->getMock();
         $urlMock->expects($this->atLeastOnce())
             ->method('adminLink')
-            ->willReturn('http://boxbilling.com/index.php?_url=/' . $link);
+            ->willReturn('http://boxbilling.org/index.php?_url=/' . $link);
         $di['url'] = $urlMock;
 
         $controllerAdmin = new \Box\Mod\Activity\Controller\Admin();
         $controllerAdmin->setDi($di);
 
         $result = $controllerAdmin->fetchNavigation();
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
     }
 
     public function testregister()

@@ -2,7 +2,7 @@
 /**
  * BoxBilling
  *
- * @copyright BoxBilling, Inc (http://www.boxbilling.com)
+ * @copyright BoxBilling, Inc (https://www.boxbilling.org)
  * @license   Apache-2.0
  *
  * Copyright BoxBilling, Inc
@@ -133,7 +133,7 @@ class Service implements InjectionAwareInterface
         try {
             $orderModel = $di['db']->load('ClientOrder', $params['id']);
             $orderTicketService = $di['mod_service']('order');
-            $order = $orderTicketService->toApiArray($orderModel, true, $di['loggedin_admin']);
+            $order = $orderTicketService->toApiArray($orderModel, true);
 
             $email = array();
             $email['to_staff']  = true;
@@ -157,7 +157,7 @@ class Service implements InjectionAwareInterface
         try {
             $supportTicketService = $di['mod_service']('support');
             $ticketModel = $supportTicketService->getTicketById($params['id']);
-            $ticket = $supportTicketService->toApiArray($ticketModel, true, $di['loggedin_admin']);
+            $ticket = $supportTicketService->toApiArray($ticketModel, true);
 
             $helpdeskModel = $di['db']->load('SupportHelpdesk', $ticketModel->support_helpdesk_id);
             $emailService = $di['mod_service']('email');
@@ -438,7 +438,6 @@ class Service implements InjectionAwareInterface
 
     public function changePassword(\Model_Admin $model, $password)
     {
-
         $this->di['events_manager']->fire(array('event'=>'onBeforeAdminStaffPasswordChange', 'params'=>array('id'=>$model->id)));
 
         $model->pass = $this->di['password']->hashIt($password);
@@ -660,7 +659,7 @@ class Service implements InjectionAwareInterface
         $content .= "Email: ".$admin_email.PHP_EOL;
         $content .= "Password: ".$admin_pass.PHP_EOL.PHP_EOL;
 
-        $content .= "Read BoxBilling documentation to get started http://www.boxbilling.com/docs/".PHP_EOL;
+        $content .= "Read BoxBilling documentation to get started http://docs.boxbilling.org/".PHP_EOL;
         $content .= "Thank You for using BoxBilling.".PHP_EOL;
 
         $subject = sprintf('BoxBilling is ready at "%s"', BB_URL);

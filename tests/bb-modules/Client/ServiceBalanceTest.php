@@ -3,7 +3,7 @@
 
 namespace Box\Tests\Mod\Client;
 
-class ServiceBalanceTest extends \PHPUnit_Framework_TestCase
+class ServiceBalanceTest extends \BBTestCase
 {
 
     public function testgetDi()
@@ -71,7 +71,8 @@ class ServiceBalanceTest extends \PHPUnit_Framework_TestCase
             'rel_id' => 1,
         );
 
-        $this->setExpectedException('\Box_Exception', 'Funds description is not valid');
+        $this->expectException(\Box_Exception::class);
+        $this->expectExceptionMessage('Funds description is not valid');
         $service->deductFunds($clientModel, $amount, $description, $extra);
     }
 
@@ -89,7 +90,8 @@ class ServiceBalanceTest extends \PHPUnit_Framework_TestCase
             'rel_id' => 1,
         );
 
-        $this->setExpectedException('\Box_Exception', 'Funds amount is not valid');
+        $this->expectException(\Box_Exception::class);
+        $this->expectExceptionMessage('Funds amount is not valid');
         $service->deductFunds($clientModel, $amount, $description, $extra);
     }
 }

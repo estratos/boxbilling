@@ -2,7 +2,7 @@
 /**
  * BoxBilling
  *
- * @copyright BoxBilling, Inc (http://www.boxbilling.com)
+ * @copyright BoxBilling, Inc (https://www.boxbilling.org)
  * @license   Apache-2.0
  *
  * Copyright BoxBilling, Inc
@@ -29,7 +29,6 @@ class Box_Mod
         'currency',
         'email',
         'extension',
-        'filemanager',
         'hook',
         'index',
         'invoice',
@@ -92,12 +91,12 @@ class Box_Mod
             'description'   => NULL,
             'homepage_url'  => 'https://github.com/boxbilling/',
             'author'        => 'BoxBilling',
-            'author_url'    => 'https://extensions.boxbilling.com/',
-            'license'       => 'GPL version 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html',
+            'author_url'    => 'https://extensions.boxbilling.org/',
+            'license'       => 'N/A',
             'version'       => '1.0',
             'icon_url'      => NULL,
             'download_url'  => NULL,
-            'project_url'   => 'https://extensions.boxbilling.com/',
+            'project_url'   => 'https://extensions.boxbilling.org/',
             "minimum_boxbilling_version" => NULL,
             "maximum_boxbilling_version" => NULL,
         );

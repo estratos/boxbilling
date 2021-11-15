@@ -3,7 +3,7 @@
 
 namespace Box\Mod\Servicesolusvm;
 
-class SolusVMTest extends \PHPUnit_Framework_TestCase {
+class SolusVMTest extends \BBTestCase {
 
     public function testgetDi()
     {
@@ -25,7 +25,7 @@ class SolusVMTest extends \PHPUnit_Framework_TestCase {
 
         $solusVm = new SolusVM();
         $result = $solusVm->buildUrl($config);
-        $this->assertInternalType('string', $result);
+        $this->assertIsString($result);
         $this->assertNotEmpty($result);
 
         $expected = $config['protocol'] ."://". $config['ipaddress'] . ":" . $config['port'] . "/api/" . $config['usertype'] . "/command.php";

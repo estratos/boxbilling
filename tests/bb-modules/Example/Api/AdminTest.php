@@ -4,14 +4,14 @@
 namespace Box\Mod\Example\Api;
 
 
-class AdminTest extends \PHPUnit_Framework_TestCase {
+class AdminTest extends \BBTestCase {
 
     /**
      * @var \Box\Mod\Example\Api\Admin
      */
     protected $api = null;
 
-    public function setup()
+    public function setup(): void
     {
         $this->api= new \Box\Mod\Example\Api\Admin();
     }
@@ -21,7 +21,7 @@ class AdminTest extends \PHPUnit_Framework_TestCase {
         $data = array('microsoft' => '');
         $expected = array('apple', 'google', 'facebook', 'microsoft');
         $result = $this->api->get_something($data);
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $this->assertEquals($expected, $result);
     }
 }

@@ -2,7 +2,7 @@
 /**
 * BoxBilling
 *
-* @copyright BoxBilling, Inc (http://www.boxbilling.com)
+* @copyright BoxBilling, Inc (https://www.boxbilling.org)
 * @license   Apache-2.0
 *
 * Copyright BoxBilling, Inc
@@ -352,6 +352,6 @@ class ServicePayGateway implements InjectionAwareInterface
             $p['bb_invoice_hash']   = $model->hash;
             $p['bb_redirect']       = 1;
         }
-        return $this->di['config']['debug'] . 'bb-ipn.php?'.http_build_query($p);
+        return $this->di['config']['url'] . 'bb-ipn.php?'.http_build_query($p);
     }
 }

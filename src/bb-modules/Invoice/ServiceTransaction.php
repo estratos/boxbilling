@@ -2,7 +2,7 @@
 /**
 * BoxBilling
 *
-* @copyright BoxBilling, Inc (http://www.boxbilling.com)
+* @copyright BoxBilling, Inc (https://www.boxbilling.org)
 * @license   Apache-2.0
 *
 * Copyright BoxBilling, Inc
@@ -40,7 +40,8 @@ class ServiceTransaction implements InjectionAwareInterface
         $this->di['logger']->info('Executed action to process received transactions');
         $received = $this->getReceived();
         foreach($received as $transaction) {
-            $this->preProcessTransaction($transaction);
+            $model = $this->di['db']->getExistingModelById('Transaction', $transaction['id']);
+            $this->preProcessTransaction($model);
         }
         return true;
     }
@@ -58,6 +59,8 @@ class ServiceTransaction implements InjectionAwareInterface
         $model->type = $this->di['array_get']($data, 'type', $model->type);
         $model->note = $this->di['array_get']($data, 'note', $model->note);
         $model->status = $this->di['array_get']($data, 'status', $model->status);
+        $model->error = $this->di['array_get']($data, 'error', $model->error);
+        $model->error_code = $this->di['array_get']($data, 'error_code', $model->error_code);
         $model->validate_ipn = $this->di['array_get']($data, 'validate_ipn', $model->validate_ipn);
         $model->updated_at = date('Y-m-d H:i:s');
         $this->di['db']->store($model);
@@ -87,9 +90,8 @@ class ServiceTransaction implements InjectionAwareInterface
             if(!isset($data['bb_gateway_id'])) {
                 throw new \Box_Exception('Payment gateway id is missing');
             }
-            $invoice = $this->di['db']->getExistingModelById('Invoice', $data['bb_invoice_id'], 'Invoice was not found');
-
-            $gateway = $this->di['db']->getExistingModelById('PayGateway', $data['bb_gateway_id'], 'Gateway was not found');
+            $this->di['db']->getExistingModelById('Invoice', $data['bb_invoice_id'], 'Invoice was not found');
+            $this->di['db']->getExistingModelById('PayGateway', $data['bb_gateway_id'], 'Gateway was not found');
         }
 
         $ipn = array(
@@ -385,8 +387,8 @@ class ServiceTransaction implements InjectionAwareInterface
             'status'    =>  'received'
         );
         list($sql, $params) = $this->getSearchQuery($filter);
-        $assocArray = $this->di['db']->getAll($sql, $params);
-        return $this->di['db']->convertToModels('transaction', $assocArray);
+
+        return $this->di['db']->getAll($sql, $params);
     }
 
     public function process($tx)

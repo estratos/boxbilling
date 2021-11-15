@@ -1,41 +1,33 @@
-# http://docs.travis-ci.com/user/build-configuration/
+os: linux
+dist: focal
+language: shell
+services:
+  - docker
 
-language: php
+script:
+  - make test
 
-php:
-  - 5.3
-  - 5.4
-  - 5.5
-  - 5.6
-  - 7.0
-  - hhvm
+before_deploy:
+  - echo "${TRAVIS_TAG}" "${TRAVIS_BUILD_NUMBER}" "${TRAVIS_COMMIT}"
+  - make build
 
-matrix:
-  allow_failures:
-    - php: hhvm
-    - php: 7.0
-
-install:
-  - composer self-update
-
-before_script:
-  - mysql --user=root -e "CREATE USER 'foo'@'localhost' IDENTIFIED BY 'foo';"
-  - mysql --user=root -e "GRANT ALL PRIVILEGES ON *.* TO 'foo'@'localhost'"
-  - mysql -e 'create database IF NOT EXISTS boxbilling'
-
-script: ant
-
-notifications:
-  email: false
-
-before_deploy: ant release
 deploy:
   provider: releases
-  api-key:
-    secure: tVzZ+3U0ndBGvoUpFqA6ikg6fDKnPgMoNqK1pvTdEp0xmrFtjMP/fuc8+awObhj89iEC+MyzfsOP57CZbHR/UjmUSHPQew+BvTwxYmTUzgUeyUrYsTEI7WJgB7tsL35aRgrpxk102tlSmlX7EonufUT0svPOAQ1p4NgZRm3GI3A=
+  token: $GITHUB_DEPLOY_TOKEN
   file: ./build/distribution/BoxBilling.zip
+  draft: true
+  overwrite: true
+  name: ${TRAVIS_TAG}
   skip_cleanup: true
   on:
     tags: true
     all_branches: true
-    php: 5.3
+
+notifications:
+  email: false
+  slack: boxbilling:$SLACK_NOTIFICATIONS
+
+branches:
+  only:
+    - master
+    - /^\d+.\d+.\d+$/

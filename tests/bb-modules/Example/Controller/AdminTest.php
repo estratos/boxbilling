@@ -4,7 +4,7 @@
 namespace Box\Mod\Example\Controller;
 
 
-class AdminTest extends \PHPUnit_Framework_TestCase {
+class AdminTest extends \BBTestCase {
 
     public function testDi()
     {
@@ -26,7 +26,7 @@ class AdminTest extends \PHPUnit_Framework_TestCase {
         $urlMock = $this->getMockBuilder('Box_Url')->getMock();
         $urlMock->expects($this->atLeastOnce())
             ->method('adminLink')
-            ->willReturn('http://boxbilling.com/index.php?_url=/' . $link);
+            ->willReturn('http://boxbilling.org/index.php?_url=/' . $link);
         $di['url'] = $urlMock;
 
         $controller = new \Box\Mod\Example\Controller\Admin();
@@ -36,8 +36,8 @@ class AdminTest extends \PHPUnit_Framework_TestCase {
         $this->assertArrayHasKey('group', $result);
         $this->assertArrayHasKey('subpages', $result);
 
-        $this->assertInternalType('array', $result['group']);
-        $this->assertInternalType('array', $result['subpages']);
+        $this->assertIsArray($result['group']);
+        $this->assertIsArray($result['subpages']);
     }
 
     public function testregister()

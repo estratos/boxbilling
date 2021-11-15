@@ -2,7 +2,7 @@
 /**
  * BoxBilling
  *
- * @copyright BoxBilling, Inc (http://www.boxbilling.com)
+ * @copyright BoxBilling, Inc (https://www.boxbilling.org)
  * @license   Apache-2.0
  *
  * Copyright BoxBilling, Inc
@@ -248,6 +248,11 @@ class Admin extends \Api_Abstract
 
         $this->di['events_manager']->fire(array('event'=>'onBeforeAdminClientUpdate', 'params'=>$data));
 
+        $phoneCC = $this->di['array_get']($data, 'phone_cc', $client->phone_cc);
+        if(!empty($phoneCC)){
+            $client->phone_cc = intval($phoneCC);
+        }
+
         $client->email          = $this->di['array_get']($data, 'email', $client->email);
         $client->first_name     = $this->di['array_get']($data, 'first_name', $client->first_name);
         $client->last_name      = $this->di['array_get']($data, 'last_name', $client->last_name);
@@ -258,7 +263,6 @@ class Admin extends \Api_Abstract
         $client->company_vat    = $this->di['array_get']($data, 'company_vat', $client->company_vat);
         $client->address_1      = $this->di['array_get']($data, 'address_1', $client->address_1);
         $client->address_2      = $this->di['array_get']($data, 'address_2', $client->address_2);
-        $client->phone_cc       = $this->di['array_get']($data, 'phone_cc', $client->phone_cc);
         $client->phone          = $this->di['array_get']($data, 'phone', $client->phone);
         $client->document_type  = $this->di['array_get']($data, 'document_type', $client->document_type);
         $client->document_nr    = $this->di['array_get']($data, 'document_nr', $client->document_nr);
@@ -273,16 +277,16 @@ class Admin extends \Api_Abstract
         $client->tax_exempt     = $this->di['array_get']($data, 'tax_exempt', $client->tax_exempt);
         $client->created_at     = $this->di['array_get']($data, 'created_at', $client->created_at);
 
-        $client->custom_1      = $this->di['array_get']($data, 'custom_1', $client->c1);
-        $client->custom_2      = $this->di['array_get']($data, 'custom_2', $client->c2);
-        $client->custom_3      = $this->di['array_get']($data, 'custom_3', $client->c3);
-        $client->custom_4      = $this->di['array_get']($data, 'custom_4', $client->c4);
-        $client->custom_5      = $this->di['array_get']($data, 'custom_5', $client->c5);
-        $client->custom_6      = $this->di['array_get']($data, 'custom_6', $client->c6);
-        $client->custom_7      = $this->di['array_get']($data, 'custom_7', $client->c7);
-        $client->custom_8      = $this->di['array_get']($data, 'custom_8', $client->c8);
-        $client->custom_9      = $this->di['array_get']($data, 'custom_9', $client->c9);
-        $client->custom_10     = $this->di['array_get']($data, 'custom_10', $client->c10);
+        $client->custom_1      = $this->di['array_get']($data, 'custom_1', $client->custom_1);
+        $client->custom_2      = $this->di['array_get']($data, 'custom_2', $client->custom_2);
+        $client->custom_3      = $this->di['array_get']($data, 'custom_3', $client->custom_3);
+        $client->custom_4      = $this->di['array_get']($data, 'custom_4', $client->custom_4);
+        $client->custom_5      = $this->di['array_get']($data, 'custom_5', $client->custom_5);
+        $client->custom_6      = $this->di['array_get']($data, 'custom_6', $client->custom_6);
+        $client->custom_7      = $this->di['array_get']($data, 'custom_7', $client->custom_7);
+        $client->custom_8      = $this->di['array_get']($data, 'custom_8', $client->custom_8);
+        $client->custom_9      = $this->di['array_get']($data, 'custom_9', $client->custom_9);
+        $client->custom_10     = $this->di['array_get']($data, 'custom_10', $client->custom_10);
 
         $client->client_group_id = $this->di['array_get']($data, 'group_id', $client->client_group_id);
         $client->company_number = $this->di['array_get']($data, 'company_number', $client->company_number);

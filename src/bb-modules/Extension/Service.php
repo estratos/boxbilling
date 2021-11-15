@@ -2,7 +2,7 @@
 /**
  * BoxBilling
  *
- * @copyright BoxBilling, Inc (http://www.boxbilling.com)
+ * @copyright BoxBilling, Inc (https://www.boxbilling.org)
  * @license   Apache-2.0
  *
  * Copyright BoxBilling, Inc
@@ -188,6 +188,15 @@ class Service implements InjectionAwareInterface
 
             }
             $result = array_values($result);
+        }
+
+        foreach ($result as $key => $value){
+            $iconPath = 'images/icons/middlenav/cog.png';
+            $icon_url = $this->di['array_get']($value, 'icon_url');
+            if ($icon_url){
+                $iconPath = $this->di['config']['url'].$icon_url;
+            }
+            $result[$key]['icon_url'] = $iconPath;
         }
 
         return $result;
@@ -578,7 +587,7 @@ class Service implements InjectionAwareInterface
             WHERE extension = :ext
             AND meta_key = 'config'
             LIMIT 1;
-        ";;
+        ";
 
         $config = json_encode($data);
         $config = $this->di['crypt']->encrypt($config, $this->_getSalt());

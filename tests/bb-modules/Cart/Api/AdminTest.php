@@ -2,14 +2,14 @@
 
 namespace Box\Tests\Mod\Cart\Api;
 
-class AdminTest extends \PHPUnit_Framework_TestCase
+class AdminTest extends \BBTestCase
 {
     /**
      * @var \Box\Mod\Cart\Api\Admin
      */
     protected $adminApi = null;
 
-    public function setup()
+    public function setup(): void
     {
         $this->adminApi = new \Box\Mod\Cart\Api\Admin();
     }
@@ -55,7 +55,7 @@ class AdminTest extends \PHPUnit_Framework_TestCase
         $data   = array();
         $result = $this->adminApi->get_list($data);
 
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
     }
 
     public function testGet()
@@ -87,7 +87,7 @@ class AdminTest extends \PHPUnit_Framework_TestCase
         );
         $result = $this->adminApi->get($data);
 
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
     }
 
 

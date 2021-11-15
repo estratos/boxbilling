@@ -4,14 +4,14 @@
 namespace Box\Mod\Spamchecker;
 
 
-class ServiceTest extends \PHPUnit_Framework_TestCase {
+class ServiceTest extends \BBTestCase {
 
     /**
      * @var \Box\Mod\Spamchecker\Service
      */
     protected $service = null;
 
-    public function setup()
+    public function setup(): void
     {
         $this->service= new \Box\Mod\Spamchecker\Service();
     }
@@ -80,6 +80,9 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
             ->willReturn($di);
 
         $this->service->onBeforeClientCreateForumTopic($boxEventMock);
+
+        //TODO maybe we can write better test here?
+        $this->assertTrue(true);
     }
 
     public function testonBeforeClientRepliedInForum()
@@ -152,9 +155,9 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
         );
 
 
-        $toolsMock = $this->getMockBuilder('\Box_Tools')->getMock();
-        $toolsMock->expects($this->atLeastOnce())
-            ->method('getIpv4')
+        $reqMock = $this->getMockBuilder('\Box_Request')->getMock();
+        $reqMock->expects($this->atLeastOnce())
+            ->method('getClientAddress')
             ->willReturn($clientIp);
 
         $di = new \Box_Di();
@@ -163,7 +166,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
                 return $modConfig;
             }
         });
-        $di['tools'] = $toolsMock;
+        $di['request'] = $reqMock;
 
         $boxEventMock = $this->getMockBuilder('\Box_Event')->disableOriginalConstructor()
             ->getMock();
@@ -171,7 +174,8 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
             ->method('getDi')
             ->willReturn($di);
 
-        $this->setExpectedException('\Box_Exception', sprintf("IP %s is blocked", $clientIp), 403);
+        $this->expectException(\Box_Exception::class);
+        $this->expectExceptionMessage(sprintf("Your IP addresss (%s) is blocked. Please contact our support to lift your block.", $clientIp), 403);
         $this->service->isBlockedIp($boxEventMock);
     }
 
@@ -184,9 +188,9 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
         );
 
 
-        $toolsMock = $this->getMockBuilder('\Box_Tools')->getMock();
-        $toolsMock->expects($this->atLeastOnce())
-            ->method('getIpv4')
+        $reqMock = $this->getMockBuilder('\Box_Request')->getMock();
+        $reqMock->expects($this->atLeastOnce())
+            ->method('getClientAddress')
             ->willReturn($clientIp);
 
         $di = new \Box_Di();
@@ -195,7 +199,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
                 return $modConfig;
             }
         });
-        $di['tools'] = $toolsMock;
+        $di['request'] = $reqMock;
 
         $boxEventMock = $this->getMockBuilder('\Box_Event')->disableOriginalConstructor()
             ->getMock();
@@ -249,13 +253,13 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
     {
         return array(
             array(
-                '{"success" : "true", "username" : {"appears" : "true" }}', 'Your Username is blacklisted in global database'
+                '{"success" : "true", "username" : {"appears" : "true" }}', 'Your username is blacklisted in the Stop Forum Spam database'
             ),
             array(
-                '{"success" : "true", "email" : {"appears" : "true" }}', 'Your Email is blacklisted in global database'
+                '{"success" : "true", "email" : {"appears" : "true" }}', 'Your e-mail is blacklisted in the Stop Forum Spam database'
             ),
             array(
-                '{"success" : "true", "ip" : {"appears" : "true" }}', 'Your IP is blacklisted in global database'
+                '{"success" : "true", "ip" : {"appears" : "true" }}', 'Your IP address is blacklisted in the Stop Forum Spam database'
             ),
         );
     }
@@ -275,7 +279,8 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
 
         $data = array();
         $this->service->setDi($di);
-        $this->setExpectedException('Box_Exception', $exceptionMessage);
+        $this->expectException(\Box_Exception::class);
+        $this->expectExceptionMessage($exceptionMessage);
         $this->service->isInStopForumSpamDatabase($data);
     }
 

@@ -4,7 +4,7 @@
 namespace Box\Mod\Cron\Api;
 
 
-class AdminTest extends \PHPUnit_Framework_TestCase {
+class AdminTest extends \BBTestCase {
 
     public function testgetDi()
     {
@@ -24,7 +24,7 @@ class AdminTest extends \PHPUnit_Framework_TestCase {
         $api_admin->setService($serviceMock);
 
         $result = $api_admin->info(array());
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
     }
 
     public function testrun()
@@ -36,7 +36,7 @@ class AdminTest extends \PHPUnit_Framework_TestCase {
         $api_admin->setService($serviceMock);
 
         $result = $api_admin->run(array());
-        $this->assertInternalType('bool', $result);
+        $this->assertIsBool($result);
     }
 
 

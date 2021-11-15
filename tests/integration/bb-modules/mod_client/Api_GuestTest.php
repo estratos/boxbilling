@@ -31,7 +31,7 @@ class Api_Guest_ClientTest extends BBDbApiTestCase
             'password_confirm'  =>  $pass,
         );
         $id = $this->api_guest->client_create($data);
-        $this->assertInternalType('int', $id);
+        $this->assertIsInt($id);
         $client = $this->di['db']->load('Client', $id);
 
         $this->assertNotEquals($data['password'], $client->pass);
@@ -63,7 +63,7 @@ class Api_Guest_ClientTest extends BBDbApiTestCase
     public function testPasswordReset()
     {
         $data = array(
-            'email' =>  'client@boxbilling.com',
+            'email' =>  'client@boxbilling.org',
         );
         $bool = $this->api_guest->client_reset_password($data);
         $this->assertTrue($bool);
@@ -88,12 +88,12 @@ class Api_Guest_ClientTest extends BBDbApiTestCase
     public function testClientLogin()
     {
         $data = array(
-            'email'     =>  'client@boxbilling.com',
+            'email'     =>  'client@boxbilling.org',
             'password'  =>  'demo',
             'remember'  => true
         );
         $array = $this->api_guest->client_login($data);
-        $this->assertInternalType('array', $array);
+        $this->assertIsArray($array);
         $this->assertTrue(is_numeric($this->session->get('client_id')), 'Client id is not integer');
 
         $bool = $this->api_client->client_logout($data);
@@ -106,7 +106,7 @@ class Api_Guest_ClientTest extends BBDbApiTestCase
     public function testRequired()
     {
         $array = $this->api_guest->client_required();
-        $this->assertInternalType('array', $array);
+        $this->assertIsArray($array);
     }
 
     public function testCreateWithCustom()
@@ -146,7 +146,7 @@ class Api_Guest_ClientTest extends BBDbApiTestCase
 
         );
         $id   = $this->api_guest->client_create($data);
-        $this->assertInternalType('int', $id);
+        $this->assertIsInt($id);
         $client = $this->di['db']->load('Client', $id);
 
         $this->assertEquals($data['custom_5'], $client->custom_5);

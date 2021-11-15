@@ -72,7 +72,9 @@ class Box_Mod_Invoice_ServiceTest extends BBDbApiTestCase
             'post'                  =>  $transactionIpn['post'],
         );
 
-        $this->setExpectedException('Payment_Exception', 'IPN is duplicate');
+        $this->expectException(Payment_Exception::class);
+        $this->expectExceptionMessage('IPN is duplicate');
+
         $newId = $service->createAndProcess($ipn);
 
         $transactionModel = $this->di['db']->load('Transaction', $newId);
@@ -111,4 +113,16 @@ class Box_Mod_Invoice_ServiceTest extends BBDbApiTestCase
         $this->assertEquals(0, count($result));
     }
 
+
+    public function testbatch_activate_paid()
+    {
+        $invoiceItems = $this->di['mod_service']('Invoice', 'InvoiceItem')->getAllNotExecutePaidItems();
+        $this->assertNotEmpty($invoiceItems);
+
+        $bool = $this->api_admin->invoice_batch_activate_paid();
+        $this->assertTrue($bool);
+
+        $invoiceItems = $this->di['mod_service']('Invoice', 'InvoiceItem')->getAllNotExecutePaidItems();
+        $this->assertEmpty($invoiceItems);
+    }
 }

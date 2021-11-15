@@ -4,13 +4,13 @@
 namespace Box\Mod\Theme\Api;
 
 
-class AdminTest extends \PHPUnit_Framework_TestCase {
+class AdminTest extends \BBTestCase {
     /**
      * @var \Box\Mod\Theme\Api\Admin
      */
     protected $api = null;
 
-    public function setup()
+    public function setup(): void
     {
         $this->api= new \Box\Mod\Theme\Api\Admin();
     }
@@ -33,7 +33,7 @@ class AdminTest extends \PHPUnit_Framework_TestCase {
         $this->api->setService($systemServiceMock);
 
         $result = $this->api->get_list(array());
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
     }
 
     public function testget()
@@ -58,7 +58,7 @@ class AdminTest extends \PHPUnit_Framework_TestCase {
         $this->api->setService($systemServiceMock);
 
         $result = $this->api->get($data);
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
     }
 
     public function testselect_NotAdminTheme()
@@ -170,7 +170,7 @@ class AdminTest extends \PHPUnit_Framework_TestCase {
         $this->api->setService($serviceMock);
 
         $result = $this->api->preset_delete($data);
-        $this->assertInternalType('bool', $result);
+        $this->assertIsBool($result);
         $this->assertTrue($result);
     }
 
@@ -202,7 +202,7 @@ class AdminTest extends \PHPUnit_Framework_TestCase {
         $this->api->setService($serviceMock);
 
         $result = $this->api->preset_select($data);
-        $this->assertInternalType('bool', $result);
+        $this->assertIsBool($result);
         $this->assertTrue($result);
     }
 }

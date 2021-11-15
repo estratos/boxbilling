@@ -2,14 +2,14 @@
 
 namespace Box\Tests\Mod\Staff\Api;
 
-class GuestTest extends \PHPUnit_Framework_TestCase
+class GuestTest extends \BBTestCase
 {
     /**
      * @var \Box\Mod\Staff\Api\Guest
      */
     protected $api = null;
 
-    public function setup()
+    public function setup(): void
     {
         $this->api= new \Box\Mod\Staff\Api\Guest();
     }
@@ -54,7 +54,7 @@ class GuestTest extends \PHPUnit_Framework_TestCase
         $apiMock->setService($serviceMock);
 
         $data = array(
-            'email' => 'example@boxbilling.com',
+            'email' => 'example@boxbilling.org',
             'password' => 'EasyToGuess',
         );
         $result = $apiMock->create($data);
@@ -74,11 +74,13 @@ class GuestTest extends \PHPUnit_Framework_TestCase
         $this->api->setDi($di);
 
         $data = array(
-            'email' => 'example@boxbilling.com',
+            'email' => 'example@boxbilling.org',
             'password' => 'EasyToGuess',
         );
 
-        $this->setExpectedException('\Box_Exception', 'Administrator account already exists', 55);
+        $this->expectException(\Box_Exception::class);
+        $this->expectExceptionCode(55);
+        $this->expectExceptionMessage('Administrator account already exists');
         $this->api->create($data);
     }
 
@@ -93,6 +95,7 @@ class GuestTest extends \PHPUnit_Framework_TestCase
         $di['validator'] = new \Box_Validate();
 
         $guestApi->setDi($di);
+        $this->expectException(\Box_Exception::class);
         $guestApi->login(array());
     }
 
@@ -107,6 +110,7 @@ class GuestTest extends \PHPUnit_Framework_TestCase
         $di['validator'] = new \Box_Validate();
 
         $guestApi->setDi($di);
+        $this->expectException(\Box_Exception::class);
         $guestApi->login(array('email'=>'email@domain.com'));
     }
 
@@ -137,7 +141,7 @@ class GuestTest extends \PHPUnit_Framework_TestCase
         $guestApi->setService($serviceMock);
         $guestApi->setDi($di);
         $result = $guestApi->login(array('email'=>'email@domain.com', 'password'=>'pass'));
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
     }
 
     public function testLoginCheckIpException()
@@ -166,7 +170,9 @@ class GuestTest extends \PHPUnit_Framework_TestCase
         $ip = '192.168.0.1';
         $guestApi->setIp($ip);
 
-        $this->setExpectedException('\Box_Exception', sprintf('You are not allowed to login to admin area from %s address', $ip), 403);
+        $this->expectException(\Box_Exception::class);
+        $this->expectExceptionCode(403);
+        $this->expectExceptionMessage(sprintf('You are not allowed to login to admin area from %s address', $ip));
 
         $data = array(
             'email'    => 'email@domain.com',

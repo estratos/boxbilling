@@ -4,14 +4,14 @@
 namespace Box\Mod\Invoice;
 
 
-class ServiceTaxTest extends \PHPUnit_Framework_TestCase
+class ServiceTaxTest extends \BBTestCase
 {
     /**
      * @var \Box\Mod\Invoice\ServiceTax
      */
     protected $service = null;
 
-    public function setup()
+    public function setup(): void
     {
         $this->service = new \Box\Mod\Invoice\ServiceTax();
     }
@@ -54,7 +54,7 @@ class ServiceTaxTest extends \PHPUnit_Framework_TestCase
         $this->service->setDi($di);
 
         $result = $this->service->getTaxRateForClient($clientModel);
-        $this->assertInternalType('float', $result);
+        $this->assertIsFloat($result);
         $this->assertEquals($taxRateExpected, $result);
     }
 
@@ -88,7 +88,7 @@ class ServiceTaxTest extends \PHPUnit_Framework_TestCase
         $this->service->setDi($di);
 
         $result = $this->service->getTaxRateForClient($clientModel);
-        $this->assertInternalType('float', $result);
+        $this->assertIsFloat($result);
         $this->assertEquals($taxRateExpected, $result);
     }
 
@@ -122,7 +122,7 @@ class ServiceTaxTest extends \PHPUnit_Framework_TestCase
         $this->service->setDi($di);
 
         $result = $this->service->getTaxRateForClient($clientModel);
-        $this->assertInternalType('float', $result);
+        $this->assertIsFloat($result);
         $this->assertEquals($taxRateExpected, $result);
     }
 
@@ -152,7 +152,7 @@ class ServiceTaxTest extends \PHPUnit_Framework_TestCase
 
         $taxRateExpected = 0;
         $result          = $this->service->getTaxRateForClient($clientModel);
-        $this->assertInternalType('int', $result);
+        $this->assertIsInt($result);
         $this->assertEquals($taxRateExpected, $result);
     }
 
@@ -178,7 +178,7 @@ class ServiceTaxTest extends \PHPUnit_Framework_TestCase
 
         $taxRateExpected = 0;
         $result          = $this->service->getTaxRateForClient($clientModel);
-        $this->assertInternalType('int', $result);
+        $this->assertIsInt($result);
         $this->assertEquals($taxRateExpected, $result);
     }
 
@@ -189,7 +189,7 @@ class ServiceTaxTest extends \PHPUnit_Framework_TestCase
         $invoiceModel->taxrate = 0;
 
         $result = $this->service->getTax($invoiceModel);
-        $this->assertInternalType('int', $result);
+        $this->assertIsInt($result);
         $this->assertEquals(0, $result);
     }
 
@@ -219,7 +219,7 @@ class ServiceTaxTest extends \PHPUnit_Framework_TestCase
 
         $this->service->setDi($di);
         $result = $this->service->getTax($invoiceModel);
-        $this->assertInternalType('int', $result);
+        $this->assertIsInt($result);
     }
 
     public function testdelete()
@@ -273,7 +273,7 @@ class ServiceTaxTest extends \PHPUnit_Framework_TestCase
             'taxrate' => '0.18',
         );
         $result = $this->service->create($data);
-        $this->assertInternalType('int', $result);
+        $this->assertIsInt($result);
         $this->assertEquals($newId, $result);
     }
 
@@ -298,7 +298,7 @@ class ServiceTaxTest extends \PHPUnit_Framework_TestCase
             'taxrate' => '0.18',
         );
         $result = $this->service->update($taxModel, $data);
-        $this->assertInternalType('boolean', $result);
+        $this->assertIsBool($result);
         $this->assertTrue($result);
     }
 
@@ -306,8 +306,8 @@ class ServiceTaxTest extends \PHPUnit_Framework_TestCase
     public function testgetSearchQuery()
     {
         $result = $this->service->getSearchQuery(array());
-        $this->assertInternalType('string', $result[0]);
-        $this->assertInternalType('array', $result[1]);
+        $this->assertIsString($result[0]);
+        $this->assertIsArray($result[1]);
         $this->assertEquals(array(), $result[1]);
     }
 
@@ -370,7 +370,7 @@ class ServiceTaxTest extends \PHPUnit_Framework_TestCase
         $this->service->setDi($di);
 
         $result = $this->service->toApiArray($taxModel);
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
     }
 
 }

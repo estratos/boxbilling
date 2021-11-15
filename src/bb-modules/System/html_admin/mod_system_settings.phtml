@@ -148,8 +148,8 @@
             <form method="post" action="{{ 'api/admin/extension/config_save'|link }}" class="mainForm api-form" data-api-msg="{% trans 'Countries updated' %}">
                 <fieldset>
 {% set default_countries %}
-US=United States
 AF=Afghanistan
+AX=Aland Islands
 AL=Albania
 DZ=Algeria
 AS=American Samoa
@@ -157,7 +157,7 @@ AD=Andorra
 AO=Angola
 AI=Anguilla
 AQ=Antarctica
-AG=Antigua And Barbuda
+AG=Antigua and Barbuda
 AR=Argentina
 AM=Armenia
 AW=Aruba
@@ -175,17 +175,20 @@ BJ=Benin
 BM=Bermuda
 BT=Bhutan
 BO=Bolivia
-BA=Bosnia And Herzegowina
+BQ=Bonaire, Sint Eustatius and Saba
+BA=Bosnia and Herzegovina
 BW=Botswana
 BR=Brazil
-BN=Brunei Darussalam
+IO=British Indian Ocean Territory
+VG=British Virgin Islands
+BN=Brunei
 BG=Bulgaria
 BF=Burkina Faso
 BI=Burundi
+CV=Cabo Verde
 KH=Cambodia
 CM=Cameroon
 CA=Canada
-CV=Cape Verde
 KY=Cayman Islands
 CF=Central African Republic
 TD=Chad
@@ -195,32 +198,37 @@ CX=Christmas Island
 CC=Cocos (Keeling) Islands
 CO=Colombia
 KM=Comoros
-CG=Congo
+CD=Congo (Democratic Republic of the)
+CG=Congo (Republic of the)
 CK=Cook Islands
 CR=Costa Rica
 CI=Cote D'Ivoire
 HR=Croatia
 CU=Cuba
+CW=Curacao
 CY=Cyprus
-CZ=Czech Republic
+CZ=Czechia
 DK=Denmark
 DJ=Djibouti
 DM=Dominica
 DO=Dominican Republic
-TP=East Timor
 EC=Ecuador
 EG=Egypt
 SV=El Salvador
 GQ=Equatorial Guinea
 ER=Eritrea
 EE=Estonia
+SZ=Eswatini
 ET=Ethiopia
+FK=Falkland Islands (Islas Malvinas)
 FO=Faroe Islands
 FJ=Fiji
 FI=Finland
 FR=France
+GF=French Guiana
+PF=French Polynesia
+TF=French Southern Territories
 GA=Gabon
-GB=Great Britain
 GM=Gambia
 GE=Georgia
 DE=Germany
@@ -232,11 +240,11 @@ GD=Grenada
 GP=Guadeloupe
 GU=Guam
 GT=Guatemala
+GG=Guernsey
 GN=Guinea
 GW=Guinea-Bissau
 GY=Guyana
 HT=Haiti
-EL=Hellenic Republic (Greece)
 HN=Honduras
 HK=Hong Kong
 HU=Hungary
@@ -246,22 +254,24 @@ ID=Indonesia
 IR=Iran
 IQ=Iraq
 IE=Ireland
+IM=Isle of Man
 IL=Israel
 IT=Italy
 JM=Jamaica
 JP=Japan
+JE=Jersey
 JO=Jordan
 KZ=Kazakhstan
 KE=Kenya
 KI=Kiribati
-KR=Korea, Republic Of
 KW=Kuwait
 KG=Kyrgyzstan
+LA=Laos
 LV=Latvia
 LB=Lebanon
 LS=Lesotho
 LR=Liberia
-LY=Libyan Arab Jamahiriya
+LY=Libya
 LI=Liechtenstein
 LT=Lithuania
 LU=Luxembourg
@@ -278,18 +288,19 @@ MR=Mauritania
 MU=Mauritius
 YT=Mayotte
 MX=Mexico
-MD=Moldova, Republic Of
+FM=Micronesia
+MD=Moldova
 MC=Monaco
 MN=Mongolia
+ME=Montenegro
 MS=Montserrat
 MA=Morocco
 MZ=Mozambique
-MM=Myanmar
+MM=Myanmar (Burma)
 NA=Namibia
 NR=Nauru
 NP=Nepal
 NL=Netherlands
-AN=Netherlands Antilles
 NC=New Caledonia
 NZ=New Zealand
 NI=Nicaragua
@@ -297,73 +308,87 @@ NE=Niger
 NG=Nigeria
 NU=Niue
 NF=Norfolk Island
+KP=North Korea
+MK=North Macedonia
 MP=Northern Mariana Islands
 NO=Norway
 OM=Oman
 PK=Pakistan
 PW=Palau
+PS=Palestine
 PA=Panama
 PG=Papua New Guinea
 PY=Paraguay
 PE=Peru
 PH=Philippines
-PN=Pitcairn
+PN=Pitcairn Islands
 PL=Poland
 PT=Portugal
 PR=Puerto Rico
 QA=Qatar
 RE=Reunion
 RO=Romania
-RU=Russian Federation
+RU=Russia
 RW=Rwanda
+BL=Saint Barthelemy
+SH=Saint Helena, Ascension and Tristan da Cunha
 KN=Saint Kitts And Nevis
 LC=Saint Lucia
+MF=Saint Martin
+VC=Saint Vincent and the Grenadines
+PM=Saint Pierre And Miquelon
 WS=Samoa
 SM=San Marino
 ST=Sao Tome And Principe
 SA=Saudi Arabia
 SN=Senegal
+RS=Serbia
 SC=Seychelles
 SL=Sierra Leone
 SG=Singapore
+SX=Sint Maarten
 SK=Slovakia
 SI=Slovenia
 SB=Solomon Islands
 SO=Somalia
 ZA=South Africa
+KR=South Korea
 ES=Spain
 LK=Sri Lanka
-SH=St. Helena
-PM=St. Pierre And Miquelon
 SD=Sudan
 SR=Suriname
-SZ=Swaziland
+SJ=Svalbard and Jan Mayen
 SE=Sweden
 CH=Switzerland
-SY=Syrian Arab Republic
+SY=Syria
 TW=Taiwan
 TJ=Tajikistan
 TZ=Tanzania
 TH=Thailand
+TP=Timor-Leste
 TG=Togo
 TK=Tokelau
 TO=Tonga
-TT=Trinidad And Tobago
+TT=Trinidad and Tobago
 TN=Tunisia
 TR=Turkey
 TM=Turkmenistan
-TC=Turks And Caicos Islands
+TC=Turks and Caicos Islands
 TV=Tuvalu
 UG=Uganda
 UA=Ukraine
 AE=United Arab Emirates
+GB=United Kingdom
+US=United States
+UM=United States Minor Outlying Islands
 UY=Uruguay
 UZ=Uzbekistan
 VU=Vanuatu
+VA=Vatican City
 VE=Venezuela
-VN=Viet Nam
-VG=Virgin Islands (British)
+VN=Vietnam
 VI=Virgin Islands (U.S.)
+WF=Wallis and Futuna
 EH=Western Sahara
 YE=Yemen
 ZM=Zambia
@@ -381,12 +406,6 @@ ZW=Zimbabwe
                     <input type="hidden" name="ext" value="mod_system" />
                 </fieldset>
             </form>
-        </div>
-
-        <div id="tab-cache" class="tab_content nopadding">
-
-            <a href="{{ 'api/admin/system/clear_cache'|link }}" class="api-link" data-api-msg="{% trans 'Cache folder cleared' %}">{% trans 'Invalidate cache' %}</a>
-
         </div>
 
         <div id="tab-ftp" class="tab_content nopadding">
@@ -440,6 +459,22 @@ ZW=Zimbabwe
                 <input type="submit" value="{% trans 'Update settings' %}" class="greyishBtn submitForm" />
                 </fieldset>
             </form>
+        </div>
+        
+        <div id="tab-cache" class="tab_content nopadding">
+            <div class="help">
+                <h3>{% trans 'Cache control' %}</h3>
+            </div>
+            <form method="post" action="{{ 'api/admin/system/clear_cache'|link }}" class="mainForm api-form" data-api-msg="{% trans 'Cache folder cleared' %}">
+            <fieldset>
+            <div class="rowElem noborder">
+                        <label>{% trans 'Clear' %}</label>
+                        <div class="formRight">
+                            <input type="submit" value="{% trans 'Invalidate cache' %}" class="greyishBtn submitForm" />
+                        </div>
+                        <div class="fix"></div>
+                    </div>
+            </fieldset>
         </div>
 
     </div>

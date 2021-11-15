@@ -2,7 +2,7 @@
 /**
  * BoxBilling
  *
- * @copyright BoxBilling, Inc (http://www.boxbilling.com)
+ * @copyright BoxBilling, Inc (https://www.boxbilling.org)
  * @license   Apache-2.0
  *
  * Copyright BoxBilling, Inc
@@ -99,7 +99,7 @@ class Model_ForumTopicMessageTable implements \Box\InjectionAwareInterface
                     FROM forum_topic_message ftm
                     LEFT JOIN client c ON c.id = ftm.client_id
                     LEFT JOIN forum_topic ft ON ft.id = ftm.forum_topic_id
-                    LEFT JOIN forum f ON f.id = fr.forum_id
+                    LEFT JOIN forum f ON f.id = ft.forum_id
                     WHERE ft.status IN ('active', 'locked')";
 
         $where = $bindings = array();

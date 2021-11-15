@@ -2,7 +2,7 @@
 
 namespace Box\Tests\Mod\Profile\Api;
 
-class AdminTest extends \PHPUnit_Framework_TestCase
+class AdminTest extends \BBTestCase
 {
     public function testGet()
     {
@@ -13,7 +13,7 @@ class AdminTest extends \PHPUnit_Framework_TestCase
         $model->id = 1;
         $model->role = 'admin';
         $model->admin_group_id = 1;
-        $model->email = 'admin@boxbilling.com';
+        $model->email = 'admin@boxbilling.org';
         $model->name = 'Admin';
         $model->signature = 'Sincerely';
         $model->status = 'active';
@@ -93,20 +93,16 @@ class AdminTest extends \PHPUnit_Framework_TestCase
     public function testChangePasswordExceptions()
     {
         $adminApi = new \Box\Mod\Profile\Api\Admin();
+        
+        $this->expectException(\Exception::class);
+        $adminApi->change_password(array());
+        $this->fail('password should be passed');
+        
 
-        try {
-            $adminApi->change_password(array());
-            $this->fail('password should be passed');
-        } catch(\Exception $e) {
-            //ok
-        }
-
-        try {
-            $adminApi->change_password(array('password'=>'new_pass'));
-            $this->fail('password confirmation should be passed');
-        } catch(\Exception $e) {
-            //ok
-        }
+        $this->expectException(\Exception::class);
+        $adminApi->change_password(array('password'=>'new_pass'));
+        $this->fail('password confirmation should be passed');
+        
     }
 
     public function testChangePassword()

@@ -4,13 +4,13 @@
 namespace Box\Mod\Theme;
 
 
-class ServiceTest extends \PHPUnit_Framework_TestCase {
+class ServiceTest extends \BBTestCase {
     /**
      * @var \Box\Mod\Theme\Service
      */
     protected $service = null;
 
-    public function setup()
+    public function setup(): void
     {
         $this->service= new \Box\Mod\Theme\Service();
     }
@@ -56,7 +56,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
 
         $serviceMock->setDi($di);
         $result = $serviceMock->getCurrentThemePreset($themeMock);
-        $this->assertInternalType('string', $result);
+        $this->assertIsString($result);
     }
 
     public function testsetCurrentThemePreset()
@@ -77,7 +77,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
 
         $this->service->setDi($di);
         $result = $this->service->setCurrentThemePreset($themeMock, 'dark_blue');
-        $this->assertInternalType('bool', $result);
+        $this->assertIsBool($result);
         $this->assertTrue($result);
     }
 
@@ -99,7 +99,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
 
         $this->service->setDi($di);
         $result = $this->service->deletePreset($themeMock, 'dark_blue');
-        $this->assertInternalType('bool', $result);
+        $this->assertIsBool($result);
         $this->assertTrue($result);
     }
 
@@ -135,7 +135,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
 
         $serviceMock->setDi($di);
         $result = $serviceMock->getThemePresets($themeMock, 'dark_blue');
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
 
         $expected= array(
             'default' => 'default',
@@ -166,7 +166,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
         $this->service->setDi($di);
 
         $result = $this->service->getThemePresets($themeMock, 'dark_blue');
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
 
         $expected= array(
             'Default' => 'Default',
@@ -196,7 +196,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
 
         $this->service->setDi($di);
         $result = $this->service->getThemeSettings($themeMock, 'default');
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
     }
 
     public function testgetThemeSettingsWithEmptyPresets()
@@ -227,7 +227,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
         $serviceMock->setDi($di);
 
         $result = $serviceMock->getThemeSettings($themeMock);
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $this->assertEquals(array(), $result);
     }
 
@@ -258,7 +258,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
         $this->service->setDi($di);
         $params = array();
         $result = $this->service->updateSettings($themeMock, 'default', $params);
-        $this->assertInternalType('bool', $result);
+        $this->assertIsBool($result);
         $this->assertTrue($result);
     }
 
@@ -299,7 +299,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
 
         $serviceMock->setDi($di);
         $result = $serviceMock->regenerateThemeSettingsDataFile($themeMock);
-        $this->assertInternalType('bool', $result);
+        $this->assertIsBool($result);
         $this->assertTrue($result);
 
     }
@@ -321,7 +321,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
         $this->service->setDi($di);
 
         $result = $this->service->regenerateThemeCssAndJsFiles($themeMock, 'default', new \Model_Admin());
-        $this->assertInternalType('bool', $result);
+        $this->assertIsBool($result);
         $this->assertTrue($result);
     }
 
@@ -362,14 +362,14 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
         $serviceMock->setDi($di);
 
         $result = $serviceMock->regenerateThemeCssAndJsFiles($themeMock, 'default', new \Model_Admin());
-        $this->assertInternalType('bool', $result);
+        $this->assertIsBool($result);
         $this->assertTrue($result);
     }
 
     public function testgetCurrentAdminAreaTheme()
     {
         $configMock = array(
-            'url' => 'boxbilling.com/'
+            'url' => 'boxbilling.org/'
         );
         $dbMock = $this->getMockBuilder('\Box_Database')->getMock();
         $dbMock->expects($this->atLeastOnce())
@@ -383,7 +383,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
         $this->service->setDi($di);
 
         $result =$this->service->getCurrentAdminAreaTheme();
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
     }
 
     public function testgetCurrentClientAreaTheme()
@@ -417,7 +417,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
         $this->service->setDi($di);
 
         $result = $this->service->getCurrentClientAreaThemeCode();
-        $this->assertInternalType('string', $result);
+        $this->assertIsString($result);
         $this->assertEquals('boxbilling', $result);
     }
 
@@ -448,7 +448,8 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
                 'error' => UPLOAD_ERR_CANT_WRITE
             ),
         );
-        $this->setExpectedException('\Box_Exception', sprintf("Error uploading file %s Error code: %d", 'test0', UPLOAD_ERR_CANT_WRITE));
+        $this->expectException(\Box_Exception::class);
+        $this->expectExceptionMessage(sprintf("Error uploading file %s Error code: %d", 'test0', UPLOAD_ERR_CANT_WRITE));
         $this->service->uploadAssets($themeMock, $files);
     }
 

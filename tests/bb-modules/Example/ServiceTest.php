@@ -2,14 +2,14 @@
 
 namespace Box\Tests\Mod\Example;
 
-class ServiceTest extends \PHPUnit_Framework_TestCase {
+class ServiceTest extends \BBTestCase {
 
     /**
      * @var \Box\Mod\Example\Service
      */
     private $service = null;
 
-    public function setup()
+    public function setup(): void
     {
         $this->service = new \Box\Mod\Example\Service();
     }
@@ -22,7 +22,7 @@ class ServiceTest extends \PHPUnit_Framework_TestCase {
         });
         $this->service->setDi($di);
         $result = $this->service->getSearchQuery(array());
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
     }
 
     public function testtoApiArray()

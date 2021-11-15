@@ -2,7 +2,7 @@
 /**
 * BoxBilling
 *
-* @copyright BoxBilling, Inc (http://www.boxbilling.com)
+* @copyright BoxBilling, Inc (https://www.boxbilling.org)
 * @license   Apache-2.0
 *
 * Copyright BoxBilling, Inc
@@ -73,7 +73,7 @@ class ServiceInvoiceItem implements InjectionAwareInterface
             $orderService = $this->di['mod_service']('Order');
             switch ($item->task) {
                 case \Model_InvoiceItem::TASK_ACTIVATE:
-                    $product = $this->di['db']->findOne('Product', $order->product_id);
+                    $product = $this->di['db']->getExistingModelById('Product', $order->product_id);
                     if($product->setup == \Model_Product::SETUP_AFTER_PAYMENT) {
                         try {
                             $orderService->activateOrder($order);
@@ -86,6 +86,11 @@ class ServiceInvoiceItem implements InjectionAwareInterface
 
                 case \Model_InvoiceItem::TASK_RENEW:
                     try {
+							//Unsuspend order if suspended before renew
+							if($order->status == \Model_ClientOrder::STATUS_SUSPENDED) {
+								 $orderService->unsuspendFromOrder($order);
+							}
+							
                         $order = $this->di['db']->load('ClientOrder', $order_id);
                         $orderService->renewOrder($order);
                     } catch(\Exception $e) {
@@ -115,8 +120,8 @@ class ServiceInvoiceItem implements InjectionAwareInterface
         if($item->type == \Model_InvoiceItem::TYPE_DEPOSIT) {
             $clientService = $this->di['mod_service']('Client');
 
-            $invoice = $this->di['db']->findOne('Invoice', $item->invoice_id);
-            $client = $this->di['db']->findOne('Client', $invoice->client_id);
+            $invoice = $this->di['db']->getExistingModelById('Invoice', $item->invoice_id);
+            $client = $this->di['db']->getExistingModelById('Client', $invoice->client_id);
             $data = array(
                 'type' => 'invoice',
                 'rel_id' => $item->invoice_id,
@@ -192,6 +197,13 @@ class ServiceInvoiceItem implements InjectionAwareInterface
     {
         $item->title = $this->di['array_get']($data, 'title', $item->title);
         $item->price = $this->di['array_get']($data, 'price', $item->price);
+		
+		$item_quantity =  $this->di['array_get']($data, 'quantity', 1);
+		
+		if($item_quantity != $item->quantity){
+        $item->quantity = $item_quantity > 0 ? $item_quantity : 1 ;
+		}
+		
         if(isset($data['taxed']) && !empty($data['taxed'])) {
             $item->taxed = (bool)$data['taxed'];
         } else {
@@ -300,5 +312,66 @@ class ServiceInvoiceItem implements InjectionAwareInterface
         $this->di['db']->store($pi);
 
         $corderService->setUnpaidInvoice($order, $proforma);
+                
+        // apply discount for new invoice if promo code is recurrent
+        if($order->promo_recurring) {
+            $order_total = $order->price * $order->quantity;
+            $promo_discount = $order->discount;
+            if($promo_discount >  $order_total) {
+                $promo_discount = $order_total;
+            }
+
+            $discount_title = $this->_getTitleForPromoDiscount($order->promo_id, $order->currency);
+
+            $pd = [
+                'title'    => $discount_title,
+                'price'    => $promo_discount * -1,
+                'quantity' => 1,
+                'unit'     => 'discount',
+                'rel_id'   => $order->id,
+                'taxed'    => $taxed, 
+            ];
+
+            $this->addNew($proforma, $pd);
+            $order->promo_used +=1;
+            $this->di['db']->store($order);
+        }
+    }
+    
+    private function _getTitleForPromoDiscount($promo_id, $currency)
+    {        
+        $promo = $this->di['db']->findOne('Promo', 'id = ?', [$promo_id]);
+
+        $api_guest = $this->di['api_guest'];
+                
+        switch ($promo->type) {
+            case \Model_Promo::ABSOLUTE:
+                    $currencyAmount = $api_guest->currency_format(['code' => $currency, 'price' => $promo->value]);
+                    return __('Promotional Code: :code - :value Discount', [':code' => $promo->code, ':value' => $currencyAmount]); 
+
+            case \Model_Promo::PERCENTAGE:
+                    return __('Promotional Code: :code - :value%', [':code' => $promo->code, ':value' => $promo->value]); 
+
+            default:
+                break;
+        }
+    }
+
+    /**
+     * Get list of paid invoice not executed invoice items
+     * @return array - array of Model_InvoiceItem items
+     */
+    public function getAllNotExecutePaidItems()
+    {
+        $sql      = 'SELECT invoice_item.*
+                FROM invoice_item
+                  left join invoice on invoice_item.invoice_id = invoice.id
+                WHERE invoice_item.status != :item_status and invoice.status = :invoice_status';
+        $bindings = array(
+            ':item_status'    => \Model_InvoiceItem::STATUS_EXECUTED,
+            ':invoice_status' => \Model_Invoice::STATUS_PAID,
+        );
+
+        return $this->di['db']->getAll($sql, $bindings);
     }
 }

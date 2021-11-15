@@ -4,14 +4,14 @@
 namespace Box\Mod\Hook\Api;
 
 
-class AdminTest extends \PHPUnit_Framework_TestCase {
+class AdminTest extends \BBTestCase {
 
     /**
      * @var \Box\Mod\Hook\Api\Admin
      */
     protected $api = null;
 
-    public function setup()
+    public function setup(): void
     {
         $this->api = new \Box\Mod\Hook\Api\Admin();
     }
@@ -47,7 +47,7 @@ class AdminTest extends \PHPUnit_Framework_TestCase {
         $this->api->setDi($di);
         $this->api->setService($serviceMock);
         $result = $this->api->get_list(array());
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
     }
 
     public function testcall()
@@ -81,7 +81,7 @@ class AdminTest extends \PHPUnit_Framework_TestCase {
         $data['event'] = null;
 
         $result = $this->api->call($data);
-        $this->assertInternalType('bool', $result);
+        $this->assertIsBool($result);
         $this->assertFalse($result);
     }
 

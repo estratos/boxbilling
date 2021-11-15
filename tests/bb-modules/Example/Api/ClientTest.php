@@ -4,14 +4,14 @@
 namespace Box\Mod\Example\Api;
 
 
-class ClientTest extends \PHPUnit_Framework_TestCase {
+class ClientTest extends \BBTestCase {
 
     /**
      * @var \Box\Mod\Example\Api\Client
      */
     protected $api = null;
 
-    public function setup()
+    public function setup(): void
     {
         $this->api= new \Box\Mod\Example\Api\Client();
     }
@@ -59,7 +59,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
         $this->api->setDi($di);
 
         $result = $this->api->get_info($data);
-        $this->assertInternalType('array', $result);
+        $this->assertIsArray($result);
         $this->assertArrayHasKey('version', $result);
         $this->assertArrayHasKey('profile', $result);
         $this->assertArrayHasKey('messages', $result);
